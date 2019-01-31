@@ -1,21 +1,44 @@
 import { Action } from '@ngrx/store';
+import { LoginUser } from '../models/login-user.model';
+import { Authenticate } from '../models/authenticate.model';
 
 export enum AuthActionTypes {
-  IdleLogout = '[Idle monitor] Logout',
+  Login = '[Login Page] Login',
+  LoginSuccess = '[Auth API] Login Success',
+  LoginFailure = '[Auth API] Login Failure',
   Logout = '[Auth] Logout',
+  IdleLogout = '[Idle monitor] Logout',
   LogoutComplete = '[Auth API] Logout complete',
 }
 
-export class IdleLogout implements Action {
-  readonly type = AuthActionTypes.IdleLogout;
+export class Login implements Action {
+  readonly type = AuthActionTypes.Login;
+
+  constructor(public payload: Authenticate) {}
+}
+
+export class LoginSuccess implements Action {
+  readonly type = AuthActionTypes.LoginSuccess;
+
+  constructor(public payload: { user: LoginUser }) {} // todo
+}
+
+export class LoginFailure implements Action {
+  readonly type = AuthActionTypes.LoginFailure;
+
+  constructor(public payload: { error: Error }) {} // todo
 }
 
 export class Logout implements Action {
   readonly type = AuthActionTypes.Logout;
 }
 
+export class IdleLogout implements Action {
+  readonly type = AuthActionTypes.IdleLogout;
+}
+
 export class LogoutComplete implements Action {
   readonly type = AuthActionTypes.LogoutComplete;
 }
 
-export type AuthActionsUnion = IdleLogout | Logout | LogoutComplete;
+export type AuthActionsUnion = IdleLogout | Logout | LogoutComplete | LoginSuccess | LoginFailure;

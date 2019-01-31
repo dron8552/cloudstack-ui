@@ -1,5 +1,5 @@
 import { ActivatedRoute } from '@angular/router';
-import { AuthService } from '../../shared/services/auth.service';
+import { AuthService } from '../../auth/auth.service';
 import { BaseTemplateModel } from '../shared/base-template.model';
 
 export abstract class BaseTemplateSidebarComponent {

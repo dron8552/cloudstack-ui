@@ -3,7 +3,7 @@ import { select, Store } from '@ngrx/store';
 import * as accountActions from '../../reducers/accounts/redux/accounts.actions';
 import * as fromAccounts from '../../reducers/accounts/redux/accounts.reducers';
 import { State } from '../../reducers/index';
-import { AuthService } from '../../shared/services/auth.service';
+import { AuthService } from '../../auth/auth.service';
 
 @Component({
   selector: 'cs-account-users-container',
@@ -15,7 +15,8 @@ import { AuthService } from '../../shared/services/auth.service';
       (userRegenerateKey)="generateUserKeys($event)"
       (userDeleted)="deleteUser($event)"
       (loadUserKeys)="loadUserKeys($event)"
-    ></cs-account-users>`,
+    ></cs-account-users>
+  `,
 })
 export class AccountUsersContainerComponent {
   readonly account$ = this.store.pipe(select(fromAccounts.getSelectedAccount));

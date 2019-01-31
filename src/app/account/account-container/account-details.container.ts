@@ -10,16 +10,14 @@ import * as resourceCountAction from '../../reducers/resource-count/redux/resour
 import * as fromResourceCounts from '../../reducers/resource-count/redux/resource-counts.reducers';
 import * as resourceLimitAction from '../../reducers/resource-limit/redux/resource-limits.actions';
 import * as fromResourceLimits from '../../reducers/resource-limit/redux/resource-limits.reducers';
-import { AuthService } from '../../shared/services/auth.service';
+import { AuthService } from '../../auth/auth.service';
 import { WithUnsubscribe } from '../../utils/mixins/with-unsubscribe';
 import { Account, ResourceLimit } from '../../shared/models';
 
 @Component({
   selector: 'cs-account-details-container',
   template: `
-    <cs-account-detail
-      [account]="account$ | async"
-    ></cs-account-detail>
+    <cs-account-detail [account]="account$ | async"></cs-account-detail>
     <cs-account-settings
       [account]="account$ | async"
       [configurations]="configurations$ | async"
@@ -35,7 +33,8 @@ import { Account, ResourceLimit } from '../../shared/models';
       *ngIf="isAdmin()"
       [stats]="stats$ | async"
       (statisticsUpdate)="onStatisticsUpdate()"
-    ></cs-account-statistics>`,
+    ></cs-account-statistics>
+  `,
 })
 export class AccountDetailsContainerComponent extends WithUnsubscribe() implements OnInit {
   readonly account$ = this.store.pipe(select(fromAccounts.getSelectedAccount));

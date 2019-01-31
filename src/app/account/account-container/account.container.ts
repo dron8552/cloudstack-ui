@@ -4,7 +4,7 @@ import { select, Store } from '@ngrx/store';
 import * as fromAccounts from '../../reducers/accounts/redux/accounts.reducers';
 import { State } from '../../reducers/index';
 import { Account, accountState, getPath } from '../../shared/models';
-import { AuthService } from '../../shared/services/auth.service';
+import { AuthService } from '../../auth/auth.service';
 import { WithUnsubscribe } from '../../utils/mixins/with-unsubscribe';
 import * as domainActions from '../../reducers/domains/redux/domains.actions';
 import * as fromDomains from '../../reducers/domains/redux/domains.reducers';

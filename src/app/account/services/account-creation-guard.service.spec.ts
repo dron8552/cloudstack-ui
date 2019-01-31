@@ -2,7 +2,7 @@ import { Router } from '@angular/router';
 import { async, inject, TestBed } from '@angular/core/testing';
 
 import { AccountCreationGuard } from './account-creation-guard.service';
-import { AuthService } from '../../shared/services/auth.service';
+import { AuthService } from '../../auth/auth.service';
 
 describe('AccountCreationGuard', () => {
   let service: AccountCreationGuard;

@@ -13,7 +13,7 @@ import {
 } from './user-tags.actions';
 import { UserTagsEffects } from './user-tags.effects';
 import { userTagKeys } from '../../../tags/tag-keys';
-import { AuthService } from '../../../shared/services/auth.service';
+import { AuthService } from '../../../auth/auth.service';
 
 class StoreStub {}
 

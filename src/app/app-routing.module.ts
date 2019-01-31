@@ -23,7 +23,7 @@ import { LogViewGuard } from './shared/services/log-view-guard.service';
 const routes: Routes = [
   {
     path: 'login',
-    component: LoginComponent,
+    component: LoginComponent, // LoginPageComponent
     canActivate: [LoginGuard],
   },
   {
@@ -37,6 +37,9 @@ const routes: Routes = [
   {
     path: '',
     component: HomeComponent,
+    // resolve: {
+    //   home: HomeResolverService,
+    // },
     children: [
       ...vmRoutes,
       ...volumeRoutes,

@@ -1,6 +1,6 @@
 import { EventEmitter } from '@angular/core';
 import { Account } from '../../shared/models';
-import { AuthService } from '../../shared/services/auth.service';
+import { AuthService } from '../../auth/auth.service';
 import { isUserBelongsToAccount } from '../../shared/utils/account';
 import { stateTranslations } from '../account-container/account.container';
 

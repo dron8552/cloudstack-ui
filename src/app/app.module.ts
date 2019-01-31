@@ -36,7 +36,7 @@ import { AuthModule } from './auth/auth.module';
 import { VmModule } from './vm';
 import { HomeComponent } from './home/home.component';
 import { AppComponent } from './app.component';
-import { AuthService } from './shared/services/auth.service';
+import { AuthService } from './auth/auth.service';
 import { BaseHttpInterceptor } from './shared/services/base-http-interceptor';
 import { VmLogsModule } from './vm-logs/vm-logs.module';
 import { ResourceQuotasModule } from './resource-quotas/resource-quotas.module';
@@ -54,50 +54,53 @@ export function InitAppFactory(
   store: Store<State>,
 ) {
   return () => {
-    return store
-      .pipe(
-        select(configSelectors.isLoaded),
-        filter(Boolean),
-        first(),
-      )
-      .toPromise()
-      .then(() =>
-        store
-          .pipe(
-            select(configSelectors.get('defaultInterfaceLanguage')),
-            first(),
-          )
-          .subscribe(lang => translateService.setDefaultLang(lang)),
-      )
-      .then(() => {
-        auth.initUser();
-
-        return new Promise(resolve => {
-          auth.isLoggedIn().subscribe(value => {
-            if (!value) {
-              resolve();
-            } else {
-              store.dispatch(new capabilitiesActions.LoadCapabilities());
-              store
-                .pipe(
-                  select(capabilitiesSelectors.isLoading),
-                  filter(isLoading => !isLoading),
-                )
-                .subscribe(resolve);
-            }
-          });
-        });
-      })
-      .then(() =>
-        store
-          .pipe(
-            select(configSelectors.getDefaultUserTags),
-            first(),
-          )
-          .subscribe(tags =>
-            store.dispatch(new UserTagsActions.SetDefaultUserTagsAtStartup({ tags })),
-          ),
-      );
+    return (
+      store
+        .pipe(
+          select(configSelectors.isLoaded),
+          filter(Boolean),
+          first(),
+        )
+        .toPromise()
+        .then(() =>
+          store
+            .pipe(
+              select(configSelectors.get('defaultInterfaceLanguage')),
+              first(),
+            )
+            .subscribe(lang => translateService.setDefaultLang(lang)),
+        )
+        // todo
+        // .then(() => {
+        //   auth.initUser();
+        //
+        //   return new Promise(resolve => {
+        //     auth.isLoggedIn().subscribe(value => {
+        //       if (!value) {
+        //         resolve();
+        //       } else {
+        //         store.dispatch(new capabilitiesActions.LoadCapabilities());
+        //         store
+        //           .pipe(
+        //             select(capabilitiesSelectors.isLoading),
+        //             filter(isLoading => !isLoading),
+        //           )
+        //           .subscribe(resolve);
+        //       }
+        //     });
+        //   });
+        // })
+        .then(() =>
+          store
+            .pipe(
+              select(configSelectors.getDefaultUserTags),
+              first(),
+            )
+            .subscribe(tags =>
+              store.dispatch(new UserTagsActions.SetDefaultUserTagsAtStartup({ tags })),
+            ),
+        )
+    );
   };
 }
 

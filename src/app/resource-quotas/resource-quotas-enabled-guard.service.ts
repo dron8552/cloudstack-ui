@@ -4,7 +4,7 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { select, Store } from '@ngrx/store';
 import { configSelectors, State } from '../root-store';
-import { AuthService } from '../shared/services/auth.service';
+import { AuthService } from '../auth/auth.service';
 
 @Injectable()
 export class ResourceQuotasEnabledGuard implements CanActivate {

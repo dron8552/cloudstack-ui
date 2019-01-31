@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { OsFamily } from '../../shared/models/os-type.model';
 import { Zone } from '../../shared/models/zone.model';
-import { AuthService } from '../../shared/services/auth.service';
+import { AuthService } from '../../auth/auth.service';
 import { BaseTemplateModel } from '../shared/base-template.model';
 
 @Component({
@@ -57,8 +57,8 @@ export class TemplateFilterListSelectorComponent {
     this._selectedTemplate = template
       ? template
       : this.templates && this.templates.length
-        ? this.templates[0]
-        : null;
+      ? this.templates[0]
+      : null;
   }
 
   // tslint:disable-next-line:variable-name

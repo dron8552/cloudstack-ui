@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { Account } from '../../../shared/models/account.model';
-import { AuthService } from '../../../shared/services/auth.service';
+import { AuthService } from '../../../auth/auth.service';
 import { AccountItemComponent } from '../account-item.component';
 
 @Component({

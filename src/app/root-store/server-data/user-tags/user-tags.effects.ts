@@ -78,7 +78,7 @@ import {
   UserTagsActionTypes,
 } from './user-tags.actions';
 import { TagService } from '../../../shared/services/tags/tag.service';
-import { AuthService } from '../../../shared/services/auth.service';
+import { AuthService } from '../../../auth/auth.service';
 import { ServiceOffering, Tag, TagUpdatingParams } from '../../../shared/models';
 import { userTagKeys } from '../../../tags/tag-keys';
 import { State } from '../../state';
@@ -90,6 +90,7 @@ import {
 import { Serializer } from '../../../shared/utils/serializer';
 import removeNullsAndEmptyArrays from '../../../vm-logs/remove-nulls-and-empty-arrays';
 import { TagCreationParams } from './tag-creation-params';
+import { authSelectors } from '../../../auth/store';
 
 const kebabCase = require('lodash/kebabCase');
 
@@ -411,19 +412,23 @@ export class UserTagsEffects {
   private readonly resourceType = 'User';
 
   // todo: make sure it's loaded before app starts
-  private get resourceId(): Observable<string> {
-    return this.authService.user$.pipe(
-      filter(Boolean),
-      map(user => user.userid),
-    );
-  }
+  // private get resourceId(): Observable<string> {
+  //   return this.authService.user$.pipe(
+  //     filter(Boolean),
+  //     map(user => user.userid),
+  //   );
+  // }
+
+  private resourceId: string | null;
 
   constructor(
     private actions$: Actions,
     private tagService: TagService,
     private authService: AuthService,
     private store: Store<State>,
-  ) {}
+  ) {
+    this.store.pipe(select(authSelectors.getUserId)).subscribe(id => (this.resourceId = id));
+  }
 
   private setComputeOfferingParams(offering: ServiceOffering) {
     const cpuNumberKey = `${userTagKeys.computeOfferingParam}.${offering.id}.cpunumber`;
@@ -447,13 +452,13 @@ export class UserTagsEffects {
   }
 
   private loadTags() {
-    return this.resourceId.pipe(
-      switchMap(resourceId => {
-        return this.tagService.getList({
-          resourceid: resourceId,
-        });
-      }),
-    );
+    // return this.resourceId.pipe(
+    //   switchMap(resourceId => {
+    return this.tagService.getList({
+      resourceid: this.resourceId,
+    });
+    // }),
+    // );
   }
 
   private updateTag(tag: TagCreationParams, oldTagKey: string) {
@@ -481,15 +486,15 @@ export class UserTagsEffects {
       {},
     );
 
-    return this.resourceId.pipe(
-      switchMap(resourceId => {
-        return this.tagService.remove({
-          resourceids: resourceId,
-          resourcetype: this.resourceType,
-          ...tagsData,
-        });
-      }),
-    );
+    // return this.resourceId.pipe(
+    //   switchMap(resourceId => {
+    return this.tagService.remove({
+      resourceids: this.resourceId,
+      resourcetype: this.resourceType,
+      ...tagsData,
+    });
+    // }),
+    // );
   }
 
   private createTag(tag: TagCreationParams | TagCreationParams[]) {
@@ -503,14 +508,14 @@ export class UserTagsEffects {
       {},
     );
 
-    return this.resourceId.pipe(
-      switchMap(resourceId => {
-        return this.tagService.create({
-          resourceids: resourceId,
-          resourcetype: this.resourceType,
-          ...tagsData,
-        });
-      }),
-    );
+    // return this.resourceId.pipe(
+    //   switchMap(resourceId => {
+    return this.tagService.create({
+      resourceids: this.resourceId,
+      resourcetype: this.resourceType,
+      ...tagsData,
+    });
+    // }),
+    // );
   }
 }

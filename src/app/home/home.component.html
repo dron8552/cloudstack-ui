@@ -8,8 +8,8 @@
   </mat-sidenav>
 
   <mat-sidenav-content>
-    <cs-section-nav
-      [username]="username"
+    <<cs-section-nav
+      [username]="username$ | async"
       [subroutes]="subroutes$ | async"
       (menuButtonClicked)="openAppNav()"
     ></cs-section-nav>

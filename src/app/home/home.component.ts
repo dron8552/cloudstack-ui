@@ -1,14 +1,15 @@
 import { Component, OnInit } from '@angular/core';
 import { select, Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
-import { filter, takeUntil } from 'rxjs/operators';
+import { filter, takeUntil, withLatestFrom } from 'rxjs/operators';
 
 import { State, UserTagsActions, layoutStore } from '../root-store';
-import { AuthService } from '../shared/services/auth.service';
+import { AuthService } from '../auth/auth.service';
 import { WithUnsubscribe } from '../utils/mixins/with-unsubscribe';
 import { Route, Subroute } from '../core/nav-menu/models';
 import { getCurrentRoute, getRoutes, getSubroutes } from '../core/nav-menu/redux/nav-menu.reducers';
 import * as authActions from '../reducers/auth/redux/auth.actions';
+import { authSelectors } from '../auth/store';
 
 @Component({
   selector: 'cs-home',
@@ -24,27 +25,48 @@ export class HomeComponent extends WithUnsubscribe() implements OnInit {
   );
   public username: string;
 
+  // todo change for username from store
+  public username$ = 'test';
+
   constructor(private auth: AuthService, private store: Store<State>) {
     super();
     this.username = this.auth.user ? this.auth.user.username : '';
   }
 
   public ngOnInit(): void {
-    this.store.dispatch(new UserTagsActions.LoadUserTags());
+    // this.store.dispatch(new UserTagsActions.LoadUserTags());
 
-    this.auth.loggedIn
+    this.store
       .pipe(
+        select(authSelectors.getIsLoggedIn),
         takeUntil(this.unsubscribe$),
-        filter(isLoggedIn => isLoggedIn),
+        filter(Boolean),
+        withLatestFrom(
+          this.store.pipe(select(authSelectors.getAccountName)),
+          this.store.pipe(select(authSelectors.getDomainId)),
+        ),
       )
-      .subscribe(() => {
+      .subscribe(([isLoggedIn, accountName, domainId]) => {
         this.store.dispatch(
           new authActions.LoadUserAccountRequest({
-            name: this.auth.user.account,
-            domainid: this.auth.user.domainid,
+            name: accountName,
+            domainid: domainId,
           }),
         );
       });
+    // this.auth.loggedIn
+    //   .pipe(
+    //     takeUntil(this.unsubscribe$),
+    //     filter(isLoggedIn => isLoggedIn),
+    //   )
+    //   .subscribe(() => {
+    //     this.store.dispatch(
+    //       new authActions.LoadUserAccountRequest({
+    //         name: this.auth.user.account,
+    //         domainid: this.auth.user.domainid,
+    //       }),
+    //     );
+    //   });
   }
 
   public openAppNav() {
